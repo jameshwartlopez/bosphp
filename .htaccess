@@ -1,0 +1,9 @@
+Options +FollowSymLinks
+<IfModule mod_rewrite.c>
+    # Tell PHP that the mod_rewrite module is ENABLED.
+    SetEnv HTTP_MOD_REWRITE On
+    RewriteEngine on
+#   RewriteBase /
+    RewriteRule ^$   public/    [L]    
+    RewriteRule (.*) public/$1  [L]
+</IfModule>
