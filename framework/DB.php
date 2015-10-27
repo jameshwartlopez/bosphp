@@ -19,7 +19,7 @@ class DB{
 	public function __construct(){
 		global $config;
 		try{
-
+			print_array($config);
 			$this->dns = 'mysql:host='.$config['db']['host'] .';dbname='.$config['db']['dbname'] ;
 			$this->pdo = new PDO($this->dns,$config['db']['username'],$config['db']['password']);
 		
@@ -34,38 +34,16 @@ class DB{
 
 	}
 
-	public function select($tblname,$columns=array(),$where = array()){
+	public function select($tblname,$columns=array()){
 		
 		if($this->table_exists($tblname)){
 			
 			$strSelectquery ='';
 
-			if($columns == null && $where == null){
+			if($columns == null){
 				$strSelectquery = 'SELECT * FROM '.$tblname;
-			}else if($where == null){
+			}else {
 				$strSelectquery = 'SELECT '.implode(',',$columns).' FROM '.$tblname;
-			}else{
-				
-				$where_str ="";
-				if($where != null && $columns != null){
-					$where_str = " WHERE ";
-
-					if(is_array($where)){
-						$col_where = array();
-						foreach ($where as $key => $value) {
-
-							array_push($col_where,$key);
-							array_push($this->columnsValues,$value);
-
-						}
-
-						$col_where[count($col_where) -1].=' ? ';
-						$where_str .= implode(' ? AND ',$col_where);
-					}
-
-					
-				}
-				$strSelectquery = 'SELECT '.implode(', ',$columns).' FROM '.$tblname.' '.$where_str;
 			}
 			
 			$this->query = $strSelectquery;
@@ -123,52 +101,20 @@ class DB{
 				array_push($col,'?');
 			}
 
-			$where_str ="";
-			if($where != null){
-				$where_str = " WHERE ";
-
-				if(is_array($where)){
-					$col_where = array();
-					foreach ($where as $key => $value) {
-
-						array_push($col_where,$key);
-						array_push($this->columnsValues,$value);
-
-					}
-
-					$col_where[count($col_where) -1].=' ? ';
-					$where_str .= implode(' ? AND ',$col_where);
-				}
-
-				
-			}
 			$this->columnsName[count($this->columnsName) -1] .=" = ? " ;
 			
-			$this->query = 'UPDATE '.$tblname.' SET '.implode(' = ?, ',$this->columnsName).' '.$where_str.' ';
+			$this->query = 'UPDATE '.$tblname.' SET '.implode(' = ?, ',$this->columnsName).' ';
 		}
 		
 		return $this;
 
 	}
 
-	public function delete($tblname,$where = array()){
+	public function delete($tblname){
+		
 		if($this->table_exists($tblname)){
-			$where_str ="";
-			if($where != null){
-				$where_str = " WHERE ";
-				
-				if(is_array($where)){
-					$col_where = array();
-					foreach ($where as $key => $value) {
-						array_push($col_where ,$key);
-						array_push($this->columnsValues,$value);
-					}
 
-					$col_where[count($col_where) -1].=' ? ';
-					$where_str .= implode(' ? AND ' ,$col_where);
-				}
-			}
-			$this->query = 'DELETE FROM '.$tblname.' '.$where_str;
+			$this->query = 'DELETE FROM '.$tblname.' ';
 		}
 	
 		return $this;
@@ -221,12 +167,13 @@ class DB{
 
 	public function execute(){
 		try{
-			echo '<strong> The where is -> '.$this->where_query.'</strong>';
+			
 			if(isset($this->where_query)  && !empty($this->where_query)){
 				$this->query .=" ".$this->where_query;
 			}
 			
-			
+			echo $this->query;
+			print_array($this->columnsValues);
 			if(preg_match('/^SELECT/i',$this->query)){
 			
 				$this->statement = $this->pdo->prepare($this->query);
