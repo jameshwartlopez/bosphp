@@ -85,7 +85,7 @@ class DB{
 	}
 
 
-	public function update($tblname,$columnsAndValues,$where = array()){
+	public function update($tblname,$columnsAndValues){
 		
 		if($this->table_exists($tblname)){
 
