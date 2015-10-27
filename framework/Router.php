@@ -9,7 +9,6 @@ class Router {
 
     public function __construct($_route){
         global $config;
-        print_array($config);
         $this->default_controller = $config['routes']['default_controller'];
         $this->_route = $_route;
         $this->controller = 'Controller';

@@ -19,7 +19,6 @@ class DB{
 	public function __construct(){
 		global $config;
 		try{
-			print_array($config);
 			$this->dns = 'mysql:host='.$config['db']['host'] .';dbname='.$config['db']['dbname'] ;
 			$this->pdo = new PDO($this->dns,$config['db']['username'],$config['db']['password']);
 		
@@ -172,8 +171,6 @@ class DB{
 				$this->query .=" ".$this->where_query;
 			}
 			
-			echo $this->query;
-			print_array($this->columnsValues);
 			if(preg_match('/^SELECT/i',$this->query)){
 			
 				$this->statement = $this->pdo->prepare($this->query);
