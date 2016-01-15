@@ -33,7 +33,7 @@ How to use model and create CRUD operation?
 
 See the example below.
 application/controller/home.php
-<?php 
+
 //Default Controller class
 class HomeController extends Controller{
 	
@@ -72,7 +72,7 @@ class HomeController extends Controller{
 }
 
 application/model/home.php
-<?php
+
 class HomeModel extends Model{
 	
 	private $tableName = 'tbl_user';
@@ -111,7 +111,7 @@ class HomeModel extends Model{
 }
 
 application/model/product.php
-<?php 
+
 class ProductModel extends Model{
 	public function show_products(){
 	  echo 'Tshirt,Polo';
